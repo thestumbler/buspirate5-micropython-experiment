@@ -1,0 +1,6 @@
+[submodule "ext/micropython_eeprom"]
+	path = ext/micropython_eeprom
+	url = https://github.com/peterhinch/micropython_eeprom.git
+[submodule "ext/st7789_mpy"]
+	path = ext/st7789_mpy
+	url = https://github.com/russhughes/st7789py_mpy.git
