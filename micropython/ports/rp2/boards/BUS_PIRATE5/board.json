@@ -1,0 +1,19 @@
+{
+    "deploy": [
+        "../deploy.md"
+    ],
+    "docs": "",
+    "features": [
+        "Dual-core",
+        "External Flash",
+        "USB"
+    ],
+    "images": [
+        "rp2-pico.jpg"
+    ],
+    "mcu": "rp2040",
+    "product": "Bus Pirate 5",
+    "thumbnail": "",
+    "url": "https://buspirate.com/",
+    "vendor": "Dangerous Prototypes"
+}
