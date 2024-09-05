@@ -24,13 +24,15 @@ _RDSR = const(5)  # Read status register
 # erok: True if chip supports erase.
 # page_size: None is auto detect. See docs.
 class EEPROM(EepromDevice):
-    def __init__(self, spi, cspins, size, verbose=True, block_size=9, page_size=None):
+    def __init__(self, spi, cspins, size, verbose=True, block_size=9,
+                 page_size=None, addr3=True):
         if size not in (64, 128, 256):
             print(f"Warning: possible unsupported chip. Size: {size}KiB")
         self._spi = spi
         self._cspins = cspins
         self._ccs = None  # Chip select Pin object for current chip
         self._size = size * 1024  # Chip size in bytes
+        self._addr3 = addr3 # True = 24-bit addressing, False = 16-bit
         self._bufp = bytearray(5)  # instruction + 3 byte address + 1 byte value
         self._mvp = memoryview(self._bufp)  # cost-free slicing
         if verbose:  # Test for presence of devices
@@ -52,7 +54,11 @@ class EEPROM(EepromDevice):
         mvp[3] = la & 0xFF
         mvp[0] = _READ
         cs(0)
-        self._spi.write(mvp[:4])
+        if self._addr3:
+          self._spi.write(mvp[:4])
+        else:
+          self._spi.write(bytearray([mvp[0]]))
+          self._spi.write(mvp[2:4])
         res = self._spi.read(1)
         cs(1)
         mvp[0] = _WREN
@@ -61,7 +67,11 @@ class EEPROM(EepromDevice):
         cs(1)
         mvp[0] = _WRITE
         cs(0)
-        self._spi.write(mvp[:4])
+        if self._addr3:
+          self._spi.write(mvp[:4])
+        else:
+          self._spi.write(bytearray([mvp[0]]))
+          self._spi.write(mvp[2:4])
         buf[0] = res[0] ^ 0xFF if v is None else v
         self._spi.write(buf)
         cs(1)  # Trigger write start
@@ -128,7 +138,11 @@ class EEPROM(EepromDevice):
             if read:
                 mvp[0] = _READ
                 cs(0)
-                self._spi.write(mvp[:4])
+                if self._addr3:
+                  self._spi.write(mvp[:4])
+                else:
+                  self._spi.write(bytearray([mvp[0]]))
+                  self._spi.write(mvp[2:4])
                 self._spi.readinto(mvb[start : start + npage])
                 cs(1)
             else:
@@ -138,7 +152,11 @@ class EEPROM(EepromDevice):
                 cs(1)
                 mvp[0] = _WRITE
                 cs(0)
-                self._spi.write(mvp[:4])
+                if self._addr3:
+                  self._spi.write(mvp[:4])
+                else:
+                  self._spi.write(bytearray([mvp[0]]))
+                  self._spi.write(mvp[2:4])
                 self._spi.write(mvb[start : start + npage])
                 cs(1)  # Trigger write start
                 self._wait_rdy()  # Wait until done (6ms max)

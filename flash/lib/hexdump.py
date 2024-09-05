@@ -8,7 +8,7 @@ def is_printable_ascii( ch ):
 def hexdump( vals, wrap=16, offset=None, ascii=True, prefix='' ):
   """Formats long list of bytes to a standard hex dump format."""
   if vals is None: return
-  output=[]
+  # output=[]
   line=[]
   text = []
   newline = True
@@ -26,7 +26,8 @@ def hexdump( vals, wrap=16, offset=None, ascii=True, prefix='' ):
         text.append(' ')
     newline = False
     if i%wrap == (wrap-1): # new line
-      output.extend( [ ' '.join( [ ''.join( line ), ''.join(text) ]  ) ] )
+      # output.extend( [ ' '.join( [ ''.join( line ), ''.join(text) ]  ) ] )
+      print( ' '.join( [ ''.join( line ), ''.join(text) ]  ) )
       if offset is not None: offset += wrap
       line=[]
       text=[]
@@ -35,8 +36,8 @@ def hexdump( vals, wrap=16, offset=None, ascii=True, prefix='' ):
       if offset is not None: line.extend( [ f'{offset:04x}', '   ' ] )
 
   if not newline: 
-    output.extend( [ ' '.join( [ ''.join( line ), ''.join(text) ]  ) ] )
+    # output.extend( [ ' '.join( [ ''.join( line ), ''.join(text) ]  ) ] )
+    print( ' '.join( [ ''.join( line ), ''.join(text) ]  ) )
 
-  return '\n'.join(output)
 
 

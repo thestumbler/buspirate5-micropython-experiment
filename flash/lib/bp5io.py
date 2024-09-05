@@ -42,16 +42,16 @@ class BP5BIT:
 
 class BP5IO:
   pinout_strings= [
-    'IO0  SDA     ',
-    'IO1  SCL     ',
+    'IO0  SDA  TX1',
+    'IO1  SCL  RX1',
     'IO2          ',
     'IO3          ',
    #'IO4  TX  SCLK', # BP5 original pinouts for SPI
    #'IO5  RX  MOSI', # can't use with default RP2040
    #'IO6      MISO',
    #'IO7        CS',
-    'IO4  TX  MISO',
-    'IO5  RX    CS',
+    'IO4  TX0 MISO',
+    'IO5  RX0   CS',
     'IO6      SCLK',
     'IO7      MOSI',
   ]
@@ -69,8 +69,10 @@ class BP5IO:
 
   I2C_SDA = bits[0] 
   I2C_SCL = bits[1] 
-  UART_TX = bits[4]
-  UART_RX = bits[5]
+  UART_TX0 = bits[4]
+  UART_RX0 = bits[5]
+  UART_TX1 = bits[0]
+  UART_RX1 = bits[1]
   #SPI_SCLK = bits[4]
   #SPI_MOSI = bits[5]
   #SPI_MISO = bits[6]
@@ -115,16 +117,27 @@ class BP5IO:
     return '\n'.join( self.pinout_strings() )
 
 
-# There are two UARTs, UART0 and UART1. 
-# UART0 can be mapped to GPIO 0/1, 12/13 and 16/17, and 
-# UART1 to GPIO 4/5 and 8/9.
+# There are two UARTs, UART0 and UART1,
+# which can be mapped as follows:
+# UART0 to GPIOs 0/1, 12/13 and 16/17
+# UART1 to GPIOs 4/5 and 8/9
+#
+# port 0 (GPIO 12/13)    BP5 normal uart
+# port 1 (GPIO 8/9)      unique to this demo
 
-  def make_uart(self, baudrate=115200):
-    self.tx = self.UART_TX
-    self.rx = self.UART_RX
+  def make_uart(self, port=0, baudrate=115200):
+    if port == 0:
+      self.tx = self.UART_TX0
+      self.rx = self.UART_RX0
+    elif port == 1:
+      self.tx = self.UART_TX1
+      self.rx = self.UART_RX1
+    else:
+      raise RuntimeError(f"Invalid UART port {port}, must be 0 or 1")
+    self.port = port
     self.tx.mode(Pin.OUT)
     self.rx.mode(Pin.IN)
-    self.uart = UART( 0, baudrate, 
+    self.uart = UART( self.port, baudrate, 
                    tx=self.tx.pin,
                    rx=self.rx.pin, )
     return self.uart
