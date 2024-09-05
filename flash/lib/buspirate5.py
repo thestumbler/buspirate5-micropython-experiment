@@ -33,8 +33,9 @@ class BP5:
     self.disp = display.Display(self.spi, self.sr)
     self.lamps = lamps.Lamps()
     self.psu = power.Power(self.sr, self.adc)
-    self.nand = nand.NAND(self.spi)
     self.splash()
+    # not ready, do not use NAND
+    # self.nand = nand.NAND(self.spi)
 
   # Convenience function to reset into bootloader
   def bootloader(self):

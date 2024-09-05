@@ -10,10 +10,10 @@ bp = buspirate5.BP5()
 
 msg = bytearray(b'The quick brown fox jumped over the lazy dog.') 
 
-ee = demo.EEPROM( bp )
+# ee = demo.EEPROM( bp )
 
-u0 = demo.UART( bp, 0 )
-u1 = demo.UART( bp, 1 )
+# u0 = demo.UART( bp, 0 )
+# u1 = demo.UART( bp, 1 )
 
 def loopback_string( xmt, rcv, string, nloops=10 ):
   for iloop in range(nloops):

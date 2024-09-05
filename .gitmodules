@@ -4,3 +4,6 @@
 [submodule "ext/st7789_mpy"]
 	path = ext/st7789_mpy
 	url = https://github.com/russhughes/st7789py_mpy.git
+[submodule "spi_flash"]
+	path = spi_flash
+	url = https://github.com/robert-hh/SPI_Flash.git
