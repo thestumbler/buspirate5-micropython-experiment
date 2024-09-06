@@ -17,11 +17,11 @@ class Display:
     self.cs = Pin(PIN_DISPLAY_CS, Pin.OUT)
     self.dp = Pin(PIN_DISPLAY_DP, Pin.OUT)
     self.rotation = rotation
-    self.backlight(True)
     self.width = 240
     self.height = 320
-    self.ncols = int(self.width / font16.WIDTH)
-    self.nrows = int(self.height / font16.HEIGHT)
+    self.font = font16
+    self.ncols = int(self.width / self.font.WIDTH)
+    self.nrows = int(self.height / self.font.HEIGHT)
     # print(f'ROWS x COLS: {self.nrows} x {self.ncols}' )
     self.tft = st7789.ST7789(
         self.spi, 
@@ -33,6 +33,7 @@ class Display:
         backlight=None,
         rotation=self.rotation)
     self.cls()
+    self.backlight(True)
 
   def backlight(self, light):
     self.light = light
@@ -42,14 +43,17 @@ class Display:
       self.sr.clr_bits( self.sr.MASK_DISPLAY_BACKLIGHT )
     self.sr.send()
 
-  def cls(self):
-    self.tft.rotation(0)
+  def cls(self, rotation=None):
+    if rotation is not None:
+      self.rotation = rotation
+    self.tft.rotation(self.rotation)
     self.tft.fill(0)
 
   def text(self, text, row, col, 
-           font = font16, 
+           font = None, 
            color = st7789.WHITE, 
            background = st7789.BLACK ):
+    if font is None: font = self.font
     col = col % self.ncols
     row = row % self.nrows
     x0 = col * font.WIDTH

@@ -2,6 +2,34 @@ from machine import Pin, ADC
 from bp5pins import *
 
 class Analog:
+  """Manages the analog-to-digital conversion using ADC and shift register.
+     adc = analog(SR, DISP)
+       where:
+         SR           shift register class
+         DISP         TFT display class
+     Class functions:
+       select( ch )   configures the MUX to the specified channel
+       deselect()     disables the MUX
+       read( ch )     read the ADC after switching the MUX channel
+       read()         read the ADC uses currently selected MUX channel
+       isense()       reads current sense, returns mA (doesn't use MUX)
+       strings()      all channel voltages as list of strings
+       all()          all channel voltages as numerical values
+       print()        prints all channels voltages, args:
+         clear        clears screen, default=True
+         display      prints to the display, default=True
+         console      prints to the console, default=True
+    Constants:
+       Analog MUX channels:
+         BPIO0 ... BPIO7   I/O connector signals
+         VUSB              incoming USB voltage
+         CURRENT_DETECT    current sense 
+         VREG_OUT          power supply voltage
+         MUX_VREF_OUT      I/O connector Vout
+
+  """
+  def help(self):
+    print(self.__doc__)
 
   # Note: assign analog input "channel" numbers here 
   # in this class so that the IO pins are in numerical order,
@@ -36,6 +64,20 @@ class Analog:
   LBL_VREG_OUT        = "VREG"
   LBL_MUX_VREF_OUT    = "MUXV"
 
+  UNITS_BPIO0           = "V"
+  UNITS_BPIO1           = "V"
+  UNITS_BPIO1           = "V"
+  UNITS_BPIO2           = "V"
+  UNITS_BPIO3           = "V"
+  UNITS_BPIO4           = "V"
+  UNITS_BPIO5           = "V"
+  UNITS_BPIO6           = "V"
+  UNITS_BPIO7           = "V"
+  UNITS_VUSB            = "V"
+  UNITS_CURRENT_DETECT  = "mA"
+  UNITS_VREG_OUT        = "V"
+  UNITS_MUX_VREF_OUT    = "V"
+
   NCHAN = 12
   AIN = (
     BPIO0, BPIO1, BPIO2, BPIO3,
@@ -49,6 +91,12 @@ class Analog:
     LBL_BPIO4, LBL_BPIO5, LBL_BPIO6, LBL_BPIO7,
     LBL_VUSB, LBL_CURRENT_DETECT,
     LBL_VREG_OUT, LBL_MUX_VREF_OUT,
+  )
+  UNITS = (
+    UNITS_BPIO0, UNITS_BPIO1, UNITS_BPIO2, UNITS_BPIO3,
+    UNITS_BPIO4, UNITS_BPIO5, UNITS_BPIO6, UNITS_BPIO7,
+    UNITS_VUSB, UNITS_CURRENT_DETECT,
+    UNITS_VREG_OUT, UNITS_MUX_VREF_OUT,
   )
   # analog voltages are divided by two
   # before being read by the ADC
@@ -75,8 +123,9 @@ class Analog:
   def getbit( self, value, bitnum ):
     return int((value & (1<<bitnum)) > 0)
 
-  def __init__(self, sr):
+  def __init__(self, sr, disp):
     self.sr = sr
+    self.disp = disp
     self.amux = ADC(Pin(PIN_ANALOG_MUX))
     self.isense = ADC(Pin(PIN_CURRENT_SENSE))
 
@@ -109,7 +158,10 @@ class Analog:
   def strings(self):
     out = []
     for ich in range(self.NCHAN):
-      out.append( f'{self.LABELS[ich]}: {self.read(self.AIN[ich]):6.3}')
+      out.append(
+        f'{self.LABELS[ich]}: '
+        f'{self.read(self.AIN[ich]):5.3f} '
+        f'{self.UNITS[ich]}')
     return out
 
   def __repr__(self):
@@ -126,4 +178,23 @@ class Analog:
 
   def isense( self ):
     return self.isense.read_u16() * self.ISCALE_FACTOR
+
+  def print(self, clear=True, display=True, console=True):
+    """Show the ADC voltages on the screen"""
+    if clear: self.disp.cls()
+    results = self.strings() # reads all voltages
+    # print the I/O pins first
+    for row, result in enumerate(results[0:8]):
+      if console: print(result)
+      if display: self.disp.text( result, row, 0 )
+    # print other voltages next
+    if display:
+      v = results[10] # VREG
+      self.disp.text( v, 8, 0 )
+      i = results[9] # IDET
+      self.disp.text( i, 9, 0 )
+    if console:
+      for row, result in enumerate(results[8:]):
+        print(result)
+
 

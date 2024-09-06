@@ -27,15 +27,24 @@ class BP5:
             )
     # Create the modules
     self.sw2 = Pin(PIN_BUTTONS, Pin.IN, Pin.PULL_DOWN)
+    self.lamps = lamps.Lamps()
     self.sr = sr595.SR(self.spi)
     self.io = bp5io.BP5IO(self.sr)
-    self.adc = analog.Analog(self.sr)
     self.disp = display.Display(self.spi, self.sr)
-    self.lamps = lamps.Lamps()
+    self.adc = analog.Analog(self.sr, self.disp)
     self.psu = power.Power(self.sr, self.adc)
-    self.splash()
     # not ready, do not use NAND
     # self.nand = nand.NAND(self.spi)
+    self.splash()
+    # make it easier to access each bit of the I/O connector
+    self.b0 = self.io.bits[0]
+    self.b1 = self.io.bits[1]
+    self.b2 = self.io.bits[2]
+    self.b3 = self.io.bits[3]
+    self.b4 = self.io.bits[4]
+    self.b5 = self.io.bits[5]
+    self.b6 = self.io.bits[6]
+    self.b7 = self.io.bits[7]
 
   # Convenience function to reset into bootloader
   def bootloader(self):
@@ -51,14 +60,8 @@ class BP5:
     for row in range(self.disp.nrows):
       self.disp.text( f'Row {row}', row, row )
 
-  def show(self):
-    """Show the ADC voltages on the screen"""
-    self.disp.cls()
-    voltages = self.adc.strings()[0:8]
-    for row, voltage in enumerate(voltages):
-      print(voltage)
-      self.disp.text( voltage, row+1, 0 )
-  
+
+
   def pins(self):
     """Show I/O pin definitions on the screen"""
     self.disp.cls()
@@ -66,7 +69,6 @@ class BP5:
       print(pinout)
       self.disp.text( pinout, row+1, 0 )
   
-
 
 
 

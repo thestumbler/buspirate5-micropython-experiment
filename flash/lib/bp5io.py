@@ -8,16 +8,25 @@ class BP5BIT:
     elif d == Pin.OPEN_DRAIN: return '2=OPEN_DRAIN'
     return                          f'{d}=UNKNOWN   '
 
-  def __init__(self, iobit, pin_num_io, pin_num_dir, direction):
+  def pull_string( self, p ):
+    if p is None:              return 'None=No pulls'
+    else:
+      if   p == Pin.PULL_UP:   return '1=PULL_UP    '
+      elif p == Pin.PULL_DOWN: return '2=PULL_DOWN  '
+      return                          f'{d}=UNKNOWN '
+
+  def __init__(self, iobit, pin_num_io, pin_num_dir, 
+               direction, pull=Pin.PULL_UP):
     self.iobit = iobit
     self.pin_num_dir = pin_num_dir
     self.pin_num_io = pin_num_io
     self.dir = Pin( self.pin_num_dir, Pin.OUT ) 
-    self.mode(direction)
+    self.mode(direction, pull)
 
-  def mode(self, direction):
+  def mode(self, direction, pull=Pin.PULL_UP):
     self.direction = direction
-    self.pin = Pin( self.pin_num_io, direction )
+    self.pull = pull
+    self.pin = Pin( self.pin_num_io, self.direction, self.pull )
     if self.direction == Pin.OUT:
       self.dir.on()
     else:
@@ -28,6 +37,7 @@ class BP5BIT:
     f'IO.{self.iobit}: ' \
     f'GPIO{self.pin_num_io:02d} V:{self.pin.value()} ' \
     f'D:{self.dir_string(self.direction)}        ' \
+    f'P:{self.pull_string(self.pull)}          ' \
     f'DIR{self.pin_num_dir} V:{self.dir.value()}'
 
   def value( self, val=None ):
