@@ -14,7 +14,6 @@ msg = bytearray(b'The quick brown fox jumped over the lazy dog.')
 
 # u0 = demo.UART( bp, 0 )
 # u1 = demo.UART( bp, 1 )
-
 def loopback_string( xmt, rcv, string, nloops=10 ):
   for iloop in range(nloops):
     print(f'Looping {xmt.port}>>>{rcv.port}, test {iloop:>3d}:  ', end='')
@@ -38,12 +37,11 @@ def loopback_string( xmt, rcv, string, nloops=10 ):
         print( f'<{chr(ch)}--?>', end='' )
     print()
 
-
 def loopback():
   u0.init()
   u1.init()
-  loopback_string(u0,u1,msg)
-  loopback_string(u1,u0,msg)
+  loopback_one_string(u0,u1,msg)
+  loopback_one_string(u1,u0,msg)
 
 
     

@@ -58,8 +58,11 @@ class SPIflash:
         if size is None:
             id = self.getid()
             print('ID:')
+
+            # testing received ID 
             for val in id: 
               print(f'0x{val:02x}')
+
             if id[2] == 1:
                 self._size = 512 * 1024
             else:
