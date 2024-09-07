@@ -1,6 +1,5 @@
 # MicroPython on Bus Pirate 5 -- Experimental Proof of Concept
 
-
 This repo contains MicroPython (MP) modules for use in exercising the
 hardware and interfaces of the using the RP2040 microcontroller based
 Bus Pirate 5 (BP5) from Dangerous Prototypes.
@@ -15,15 +14,10 @@ Do not use it for anything important.
 ## Installation
 
 * clone this project
-
-* program the BP5 with Micropython
-
+* program the BP5 with Micropython (see below)
 * copy flash directory to the BP5 
 
-
 ## Project Folder Organization
-
-
 
 ```
 |-- bin             <== project related scripts, progs
@@ -116,10 +110,7 @@ turns out to be not very helpful.
 #define MICROPY_ENABLE_DOC_STRING (1)
 ```
 
-## Using the Modules
-
-
-## Pinouts
+#### Pinouts
 
 ```
    BP5       BP5-firmware        MicroPython
@@ -153,31 +144,31 @@ Porting existing BP5 PIO code into MicroPython will solve this.
 #### NAND Flash
 
 The Micron MT29F1G01AB, 1 Gib / 128 MiB, SPI-connected NAND flash memory
-is not currently supported. Several easy attempts were made to access
+is not currently supported. Several attempts were made to access
 this memory using a couple of standard libraries without success.
 Getting this to work is just a matter of additional time and focus.
 
 
+
 ## Libraries
 
-MicroPython drivers for memory chips
-https://github.com/peterhinch/micropython_eeprom
+* MicroPython drivers for memory chips, Peter Hinch
+  - [https://github.com/peterhinch/micropython_eeprom](https://github.com/peterhinch/micropython_eeprom)
 
-SPI Block Device Driver
-https://github.com/robert-hh/SPI_Flash
+* SPI Block Device Driver, Robert Hammelrath
+  - [https://github.com/robert-hh/SPI_Flash](https://github.com/robert-hh/SPI_Flash)
 
-MicroPython LCD Driver in Python
-https://github.com/russhughes/st7789py_mpy
+* MicroPython LCD Driver in Python, Russ Hughes
+  - [https://github.com/russhughes/st7789py_mpy](https://github.com/russhughes/st7789py_mpy)
 
 
 ## Bus Pirate 5
 
-https://hardware.buspirate.com/introduction
-https://github.com/DangerousPrototypes/BusPirate5-firmware
-https://github.com/DangerousPrototypes/BusPirate5-hardware
+* [https://hardware.buspirate.com/introduction](https://hardware.buspirate.com/introduction)
+* [https://github.com/DangerousPrototypes/BusPirate5-firmware](https://github.com/DangerousPrototypes/BusPirate5-firmware)
+* [https://github.com/DangerousPrototypes/BusPirate5-hardware](https://github.com/DangerousPrototypes/BusPirate5-hardware)
 
 ## Micropython
 
-https://github.com/micropython/micropython
-https://docs.micropython.org/en/latest/index.html
-
+* [https://github.com/micropython/micropython](https://github.com/micropython/micropython)
+* [https://docs.micropython.org/en/latest/index.html]()
