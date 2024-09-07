@@ -1,6 +1,7 @@
 import neopixel
 from machine import Pin
 import time
+from bp5pins import *
 
 class Colors:
   red      = (255, 0, 0)
@@ -12,32 +13,67 @@ class Colors:
   white    = (255, 255, 255)
   black    = (0, 0, 0)
 
-# strip of 18 LEDs connected on GPIO.17
-'''
-                           NORTH
-       +--------------------------------------------+   
-       | SIDES         [10]      [8]                |
-       |    +----------------------------------+    |
-       |    |      [11]     [9]       [7]      |    |
-       |    |                                  |    |
-       |    |  [12] +-----------------+ [6]    |    |
-       |    |       |                 |   +----|    |
-       |[13]|       |                 |   |    |[5] |
-       |    |       |                 |   |    |    |
-  WEST |    | TOP   |                 |   |    |    | EAST
-       |    |       |                 |   |    |    |
-       |[14]|       |                 |   |    |[4] |
-       |    |       |                 |   +----|    |
-       |    |  [15] +-----------------+ [3]    |    |
-       |    |                                  |    |
-       |    |      [16]     [0]       [2]      |    |
-       |    +----------------------------------+    |
-       |               [17]      [1]                |
-       +--------------------------------------------+   
-                           SOUTH               
-'''
 
 class Lamps:
+  '''Manages the chain of 18 each RGB LEDs arranged
+  around the BP5 perimeter on the top and sides as follows:
+    lamps = lamps.Lamps()
+  Class functions:
+    write()          sends accumulated commands to LED string
+    fill(color)      send one color to all LEDs
+    on(i, color)     turns on specified LED
+    off(i)           turns off speficied LED
+    only(i, color)   turns on speficied lamp, turning off previous 
+    race()           LED race pattern (chase)
+      group            which group (see below)
+      color            color
+      dwell            on time each LED, msec
+      nloops           number laps around racetrack
+  Constants:
+    Predefined colors:   
+      red, green, blue 
+      cyan, purple, yellow
+      white, black
+    Groups of LEDs sorted by geometry:
+      use map() function for help on mapping / groups
+  '''
+
+  def help(self):
+    print(self.__doc__)
+
+  def map(self):
+    print( '''LED mapping by geometry:
+  Groups:
+    range(0:18)             all LEDs
+    top                     all LEDs on the top
+    side                    all LEDs on the sides
+    north.[top|side|north]  all north LEDS
+    south.[top|side|south]  all south LEDS
+    east.[top|side|east]    all east LEDS
+    west.[top|side|west]    all west LEDS
+  Legend:
+                        NORTH
+    +--------------------------------------------+   
+    | S             (10)      (8)                |
+    | I  +----------------------------------+    |
+    | D  |      (11)     (9)       (7)      |    |
+    | E  |                                  |    |
+    | S  | (12)  +-----------------+    (6) |    |
+    |    |       |                 |   +----|    |
+  W |(13)|       |                 |   |    |(5) | E
+  E |    | T     |                 |   | C  |    | A
+  S |    | O     |                 |   | O  |    | S
+  T |    | P     |                 |   | N  |    | T
+    |(14)|       |                 |   |    |(4) |
+    |    |       |                 |   +----|    |
+    |    | (15)  +-----------------+    (3) |    |
+    |    |                                  |    |
+    |    |      (16)     (0)       (2)      |    |
+    |    +----------------------------------+    |
+    |               (17)      (1)                |
+    +--------------------------------------------+   
+                        SOUTH''')
+
   top = (11, 9, 7, 6, 3, 2, 0, 16, 15, 12)
   side = (10, 8, 5, 4, 1, 17, 14, 13)
   class north:
@@ -57,10 +93,9 @@ class Lamps:
     side = (5, 4)
     east = (6,5,4,3)
 
-  
   def __init__(self):
     self.num = 18
-    self.sdo = Pin(17, Pin.OUT) 
+    self.sdo = Pin(PIN_RGB_CHAIN, Pin.OUT) 
     self.np = neopixel.NeoPixel(self.sdo, self.num)
     self.last_lamp = None
 

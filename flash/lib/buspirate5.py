@@ -9,13 +9,31 @@ import display
 import analog
 import power
 import bp5io
-import nand
+#import nand
 from hexdump import hexdump
 # use hello example for splash screen
-from hello import hello
+import splash
+import framebuf
+import dplogo25
 
 class BP5:
-  """Bus Pirate 5 MicroPython Proof-of-Concept Demo"""
+  '''Bus Pirate 5 RP2040 MicroPython proof-of-concept demo.
+  Get help on each peripheral device class:
+    lamps.help()   LED ring class
+    disp.help()    TFT display
+    adc.help()     analog to digital converter
+    psu.help()     adjustable power supply
+    io.help()      I/O connector pins class
+    b0..b7         individual I/O pins classes
+    sw2            push button (not class, just Pin)
+  Functions:
+    splash()       shows the splash screen
+    bootloader()   enters the RP2040 bootloader
+  See demo.py for some test scripts
+  '''
+
+  def help(self):
+    print(self.__doc__)
 
   def __init__(self):
     self.spi = SPI(0, baudrate=16_0000_0000, 
@@ -29,8 +47,8 @@ class BP5:
     self.sw2 = Pin(PIN_BUTTONS, Pin.IN, Pin.PULL_DOWN)
     self.lamps = lamps.Lamps()
     self.sr = sr595.SR(self.spi)
-    self.io = bp5io.BP5IO(self.sr)
     self.disp = display.Display(self.spi, self.sr)
+    self.io = bp5io.BP5IO(self.sr, self.disp)
     self.adc = analog.Analog(self.sr, self.disp)
     self.psu = power.Power(self.sr, self.adc)
     # not ready, do not use NAND
@@ -52,23 +70,34 @@ class BP5:
     machine.bootloader()
 
   # Splash screen
-  def splash(self):
+  def splash(self, wait=False):
     """Display boot-up splash screen"""
-    hello(self.disp, nloops=1, nrotations=1)
+    splash.screen(self.disp, nloops=1, nrotations=1, text="Bus Pirate 5")
     self.lamps.big_race(nloops=2)
+    # wait for push button to proceed
+    if wait:
+      while not self.sw2():
+        self.lamps.big_race(nloops=1)
     self.disp.cls()
     for row in range(self.disp.nrows):
       self.disp.text( f'Row {row}', row, row )
 
-
-
-  def pins(self):
-    """Show I/O pin definitions on the screen"""
+  # Logo random
+  def splash_logo(self, wait=False):
+    """Display logo randomly on screen"""
+    icon = dplogo25.logo()
+    icon.fb = framebuf.FrameBuffer(icon.buf, icon.wid, icon.hgt, 
+              framebuf.RGB565) # monkey patch FB on icon object
+    splash.logo(self.disp, icon, nloops=1 )
+    self.lamps.big_race(nloops=2)
+    # wait for push button to proceed
+    if wait:
+      while not self.sw2():
+        self.lamps.big_race(nloops=1)
     self.disp.cls()
-    for row, pinout in enumerate(self.io.pinout_strings):
-      print(pinout)
-      self.disp.text( pinout, row+1, 0 )
-  
+    for row in range(self.disp.nrows):
+      self.disp.text( f'Row {row}', row, row )
+
 
 
 

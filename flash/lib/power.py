@@ -1,7 +1,7 @@
 from machine import Pin, PWM
 import time
-
 from bp5pins import *
+
 
 # AP2127 regulator
 # Vout = Vreg * ( 1 + R1 / R2 )
@@ -33,6 +33,29 @@ from bp5pins import *
 #  MASK_CURRENT_EN_OVERRIDE  = 1<<13  active high
 
 class Power:
+  '''Adjustable Power Supply management class.
+  psu = Power(SR, ADC)
+    where:
+      SR           shift register class
+      ADC          analog to digital converter class
+  Class functions:
+    enable()             enable VREG output
+    disable()            disable VREG output
+    reset()              resets current limiter
+    enable_override()    enable current limiter override
+    disable_override()   disable current limiter override
+    voltage()            get voltage, V
+    voltage(voltage)     set voltage, V
+    current()            get current, mA
+    current(current)     set current, mA
+    measure()            measure voltage (V) and current (mA)
+    setpoint()           show voltage (V) and current (mA) setpoint
+    control()            show control bits ENABLE and OVERRIDE
+    ramp()               ramps power supply for calibration testing
+  '''
+
+  def help(self):
+    print(self.__doc__)
 
   # duty factor in counts covered 16 bit range
   MAX_DUTY_COUNTS = 64 * 1024
@@ -183,4 +206,11 @@ class Power:
     volist = [ 5, 3.85, 2.70, 1.55, 1.20 ]
     for vo in volist:
       print(f'Vout {vo:>5.2f} => Vpwm {self.vout2vpwm(vo):>5.2f}')
+
+
+
+
+
+
+
 

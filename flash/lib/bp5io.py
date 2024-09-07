@@ -1,6 +1,24 @@
 from machine import Pin, UART, SPI
 
 class BP5BIT:
+  '''Manages one I/O connector signal bit.
+  bit = BP5BIT( IOBIT, PIN_NUM_IO, PIN_NUM_DIR, DIRECTION, PULL)
+    where:
+      IOBIT        bit number (0..7)
+      PIN_NUM_IO   BP5 signal pin number (8..15)
+      PIN_NUM_DIR  BP5 direction pin number (0..7)
+      DIRECTION    Pin.IN or Pin.OUT
+      PULL         Pin.PULL_UP, Pin.PULL_DOWN, None
+  Class functions:
+    mode(dir, pull)  (re-)configures pin mode
+    value()          gets the pin value
+    value(val)       sets the pin value
+    on()             pin on (high)
+    off()            pin off (low)
+  '''
+
+  def help(self):
+    print(self.__doc__)
 
   def dir_string( self, d ):
     if   d == Pin.IN:         return '0=INPUT     '
@@ -51,7 +69,27 @@ class BP5BIT:
     return self.pin.off()
 
 class BP5IO:
-  pinout_strings= [
+  '''Manages the I/O connector signals.
+  io = BP5IO( SR )
+    where:
+      SR           shift register class
+  Class functions:
+    pullups(en)    enable/disable BP5 global pullups
+    cheat()        display I/O pin cheat sheet on display
+    make_uart()    returns UART object after setting pins
+      port         0 or 1, default = 0
+      baudrate     baudrate, default = 115200 Bd
+    make_spi()     returns SPI object after setting pins
+      baudrate     clock rate, default = 1 MBd
+  Class members:
+    bits[0-7]      BP5BIT instances, one per bit
+  '''
+
+  def help(self):
+    print(self.__doc__)
+
+  pinout_cheat_sheet = [
+    '         VREG',
     'IO0  SDA  TX1',
     'IO1  SCL  RX1',
     'IO2          ',
@@ -64,7 +102,9 @@ class BP5IO:
     'IO5  RX0   CS',
     'IO6      SCLK',
     'IO7      MOSI',
+    '          GND',
   ]
+
   bits = (
     #   iobit  iopin ddirpin  mode
     BP5BIT(0,     8,     0,    Pin.IN),
@@ -92,8 +132,9 @@ class BP5IO:
   SPI_SCLK = bits[6]
   SPI_MOSI = bits[7]
 
-  def __init__(self, sr):
+  def __init__(self, sr, disp):
     self.sr = sr
+    self.disp = disp
 
   def pullups( self, enable = None ):
     if enable is not None:
@@ -106,7 +147,6 @@ class BP5IO:
     # return state of pullups
     # note negative logic
     return not self.sr.get_bit(self.sr.PULLUP_EN)
-
 
   def strings(self):
     out = []
@@ -123,8 +163,13 @@ class BP5IO:
   def __str__(self):
     return '\n'.join( self.strings() )
 
-  def pinout(self):
-    return '\n'.join( self.pinout_strings() )
+  def cheat(self):
+    """Show I/O pin definitions on the screen"""
+    self.disp.cls()
+    for row, pinout in enumerate(self.pinout_cheat_sheet):
+      print(pinout)
+      self.disp.text( pinout, row+1, 0 )
+  
 
 
 # There are two UARTs, UART0 and UART1,
@@ -167,3 +212,7 @@ class BP5IO:
        miso=self.miso.pin,
     )
     return self.spi
+
+
+
+

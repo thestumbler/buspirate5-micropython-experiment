@@ -54,6 +54,7 @@ flash
 |   |-- analog.py      <== manages analog-to-digital converters
 |   |-- display.py     <== controls the BP5 OLED display
 |   |-- power.py       <== adjustable power supply / current limiter
+|   |-- splash.py      <== splash screen on TFT
 |   |-- nand.py        <== nand flash driver (not working)
 |   |-- eeprom_spi.py  <== eeprom driver code (EXT1)
 |   |-- bdevice.py     <== block device driver (EXT1)
@@ -147,8 +148,6 @@ The Micron MT29F1G01AB, 1 Gib / 128 MiB, SPI-connected NAND flash memory
 is not currently supported. Several attempts were made to access
 this memory using a couple of standard libraries without success.
 Getting this to work is just a matter of additional time and focus.
-
-
 
 ## Libraries
 

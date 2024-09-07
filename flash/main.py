@@ -2,11 +2,14 @@ from machine import Pin, SPI
 import time
 from bp5pins import *
 import buspirate5
+#import disponly
 import eeprom_spi as eeprom
 from hexdump import hexdump
 import demo 
 
 bp = buspirate5.BP5()
+#bp = disponly.BP5()
+b = bp
 
 
 '''

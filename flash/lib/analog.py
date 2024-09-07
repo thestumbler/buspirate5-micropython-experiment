@@ -2,32 +2,32 @@ from machine import Pin, ADC
 from bp5pins import *
 
 class Analog:
-  """Manages the analog-to-digital conversion using ADC and shift register.
-     adc = analog(SR, DISP)
-       where:
-         SR           shift register class
-         DISP         TFT display class
-     Class functions:
-       select( ch )   configures the MUX to the specified channel
-       deselect()     disables the MUX
-       read( ch )     read the ADC after switching the MUX channel
-       read()         read the ADC uses currently selected MUX channel
-       isense()       reads current sense, returns mA (doesn't use MUX)
-       strings()      all channel voltages as list of strings
-       all()          all channel voltages as numerical values
-       print()        prints all channels voltages, args:
-         clear        clears screen, default=True
-         display      prints to the display, default=True
-         console      prints to the console, default=True
-    Constants:
-       Analog MUX channels:
-         BPIO0 ... BPIO7   I/O connector signals
-         VUSB              incoming USB voltage
-         CURRENT_DETECT    current sense 
-         VREG_OUT          power supply voltage
-         MUX_VREF_OUT      I/O connector Vout
+  '''Manages the analog-to-digital conversion using ADC and shift register.
+  adc = Analog(SR, DISP)
+    where:
+      SR           shift register class
+      DISP         TFT display class
+  Class functions:
+    select( ch )   configures the MUX to the specified channel
+    deselect()     disables the MUX
+    read( ch )     read the ADC after switching the MUX channel
+    read()         read the ADC uses currently selected MUX channel
+    isense()       reads current sense, returns mA (doesn't use MUX)
+    strings()      all channel voltages as list of strings
+    all()          all channel voltages as numerical values
+    print()        prints all channels voltages, args:
+      clear        clears screen, default=True
+      display      prints to the display, default=True
+      console      prints to the console, default=True
+  Constants:
+    Analog MUX channels:
+      BPIO0 ... BPIO7   I/O connector signals
+      VUSB              incoming USB voltage
+      CURRENT_DETECT    current sense 
+      VREG_OUT          power supply voltage
+      MUX_VREF_OUT      I/O connector Vout
+  '''
 
-  """
   def help(self):
     print(self.__doc__)
 
