@@ -15,6 +15,7 @@ from hexdump import hexdump
 import splash
 import framebuf
 import dplogo25
+import bouncer
 
 class BP5:
   '''Bus Pirate 5 RP2040 MicroPython proof-of-concept demo.
@@ -64,6 +65,8 @@ class BP5:
     self.b6 = self.io.bits[6]
     self.b7 = self.io.bits[7]
 
+    self.chaser = bouncer.Bouncer(self.disp, self.lamps, self.sw2)
+
   # Convenience function to reset into bootloader
   def bootloader(self):
     """Reboot into the bootloader."""
@@ -82,21 +85,10 @@ class BP5:
     for row in range(self.disp.nrows):
       self.disp.text( f'Row {row}', row, row )
 
-  # Logo random
-  def splash_logo(self, wait=False):
-    """Display logo randomly on screen"""
-    icon = dplogo25.logo()
-    icon.fb = framebuf.FrameBuffer(icon.buf, icon.wid, icon.hgt, 
-              framebuf.RGB565) # monkey patch FB on icon object
-    splash.logo(self.disp, icon, nloops=1 )
-    self.lamps.big_race(nloops=2)
-    # wait for push button to proceed
-    if wait:
-      while not self.sw2():
-        self.lamps.big_race(nloops=1)
-    self.disp.cls()
-    for row in range(self.disp.nrows):
-      self.disp.text( f'Row {row}', row, row )
+  # Logo bouncer screen saver
+  def saver(self, wait=False):
+    """Bouncer with logo chasing all around the screen"""
+    self.chaser.go()
 
 
 

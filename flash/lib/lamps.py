@@ -47,10 +47,10 @@ class Lamps:
     range(0:18)             all LEDs
     top                     all LEDs on the top
     side                    all LEDs on the sides
-    north.[top|side|north]  all north LEDS
-    south.[top|side|south]  all south LEDS
-    east.[top|side|east]    all east LEDS
-    west.[top|side|west]    all west LEDS
+    north.[top|side|both]   the north LEDS
+    south.[top|side|both]   the south LEDS
+    east.[top|side|both]    the east LEDS
+    west.[top|side|both]    the west LEDS
   Legend:
                         NORTH
     +--------------------------------------------+   
@@ -79,19 +79,19 @@ class Lamps:
   class north:
     top = (11, 9, 7)
     side = (10, 8)
-    north = (11, 9, 7, 10, 8 )
+    both = (11, 9, 7, 10, 8 )
   class south:
     top = (16, 0, 2)
     side = (17, 1)
-    south = (16, 17, 9, 1, 2)
+    both = (16, 17, 9, 1, 2)
   class west:
     top = (12, 15)
     side = (13, 14)
-    west = (12,13,14,15)
+    both = (12,13,14,15)
   class east:
     top = (6, 3)
     side = (5, 4)
-    east = (6,5,4,3)
+    both = (6,5,4,3)
 
   def __init__(self):
     self.num = 18
@@ -122,11 +122,23 @@ class Lamps:
     self.write()
     self.last_lamp = ilamp
 
+  def on_group( self, group, color=Colors.red, dwell=25 ):
+    for i in group:
+      self.on(i, color)
+    if dwell:
+      time.sleep_ms(dwell)
+      self.off_group( group )
+
+  def off_group( self, group ):
+    for i in group:
+      self.off(i)
+
   def race(self, group, color=Colors.red, dwell=25, nloops=25):
     for n in range(nloops):
       for i in group:
         self.only(i, color)
         time.sleep_ms(dwell)
+    self.off(self.last_lamp)
 
   def big_race(self, nloops=500):
     for n in range(nloops):
