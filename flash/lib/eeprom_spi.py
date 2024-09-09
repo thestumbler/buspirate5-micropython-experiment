@@ -90,9 +90,9 @@ class EEPROM(EepromDevice):
         print(f"{n + 1} chips detected.")
         return n
 
-    def erase(self):
+    def erase(self, fill=b"\0"):
         mvp = self._mvp
-        block = b"\0" * 256
+        block = fill * 256
         for n in range(0, self._a_bytes, 256):
             self[n : n + 256] = block
 
