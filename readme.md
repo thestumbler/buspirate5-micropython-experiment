@@ -31,11 +31,12 @@ Do not use it for anything important.
 |   |-- examples
 |   |-- fonts
 |   +-- lib
-+-- micropython     <== BP5 board description file
-    +-- ports           for MicroPython, optional
-        +-- rp2
-            +-- boards
-                +-- BUS_PIRATE5
+|-- micropython     <== BP5 board description file
+|   +-- ports           for MicroPython, optional
+|       +-- rp2
+|           +-- boards
+|               +-- BUS_PIRATE5
++-- rp2             <== pre-built MicroPython UF2 for BP5
 ```
 
 ## Project Files on Flash Drive
@@ -73,6 +74,8 @@ Raspberry Pi RP2040 Pico.  There is a MicroPython board definition
 folder in this repository BUS_PIRATE5 for making a custom MP build.
 Note: Testing with the default Thonny MicroPython to install MP failed.
 It seems that the code fails when run under v1.23 of MP. 
+
+A pre-built UF2 image is provided in the repository in the RP2 folder.
 
 #### Local FLASH drive size
 

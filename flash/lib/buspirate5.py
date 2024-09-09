@@ -29,6 +29,7 @@ class BP5:
     sw2            push button (not class, just Pin)
   Functions:
     splash()       shows the splash screen
+    saver()        DP logo bounces around the display
     bootloader()   enters the RP2040 bootloader
   See demo.py for some test scripts
   '''
