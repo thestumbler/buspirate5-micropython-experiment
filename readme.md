@@ -45,9 +45,9 @@ Do not use it for anything important.
 flash
 |-- boot.py            <== standard MP bootup
 |-- main.py            <== main program
+|-- buspirate5.py      <== main BP5 class
 |-- demo.py            <== contains some demo programs
 |-- lib
-|   |-- buspirate5.py
 |   |-- bp5pins.py     <== RP2040 pin definition constants
 |   |-- bp5io.py       <== Manages BP5 I/O pins and devices
 |   |-- sr595.py       <== on-board I/O expansion shift register
@@ -57,14 +57,18 @@ flash
 |   |-- power.py       <== adjustable power supply / current limiter
 |   |-- splash.py      <== splash screen on TFT
 |   |-- nand.py        <== nand flash driver (not working)
-|   |-- eeprom_spi.py  <== eeprom driver code (EXT1)
-|   |-- bdevice.py     <== block device driver (EXT1)
-|   |-- flash_spi.py   <== spi flash driver code (EXT1)
-|   |-- flash_test.py  <== flash utility functions (EXT1)
-|   |-- spiflash.py    <== spi flash driver code (EXT2)
-|   |-- flashbdev.py   <== block device driver (EXT2)
-|   |-- st7789py.py    <== OLED driver code (EXT3)
 |   |-- hexdump.py     <== block hex dump utility
+|   |
+|   |-- eeprom_spi.py  <== eeprom driver code      (EXT1)
+|   |-- bdevice.py     <== block device driver     (EXT1)
+|   |-- flash_spi.py   <== spi flash driver code   (EXT1)
+|   |-- flash_test.py  <== flash utility functions (EXT1)
+|   |
+|   |-- spiflash.py    <== spi flash driver code   (EXT2)
+|   |-- flashbdev.py   <== block device driver     (EXT2)
+|   |
+|   |-- st7789py.py    <== OLED driver code        (EXT3)
+
 ```
 
 ## Micropython

@@ -57,6 +57,7 @@ class EEPROM:
 
 
 class UART:
+  '''Test of serial port UART.'''
   def __init__( self, bp, port=0, baud=115200 ):
     self.bp = bp
     self.port = port

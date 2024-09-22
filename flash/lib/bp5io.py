@@ -1,6 +1,7 @@
 from machine import Pin, UART, SPI
 
 class BP5BIT:
+  __doc__ = \
   '''Manages one I/O connector signal bit.
   bit = BP5BIT( IOBIT, PIN_NUM_IO, PIN_NUM_DIR, DIRECTION, PULL)
     where:
@@ -14,8 +15,7 @@ class BP5BIT:
     value()          gets the pin value
     value(val)       sets the pin value
     on()             pin on (high)
-    off()            pin off (low)
-  '''
+    off()            pin off (low)'''
 
   def help(self):
     print(self.__doc__)
@@ -69,6 +69,7 @@ class BP5BIT:
     return self.pin.off()
 
 class BP5IO:
+  __doc__ = \
   '''Manages the I/O connector signals.
   io = BP5IO( SR )
     where:
@@ -82,8 +83,7 @@ class BP5IO:
     make_spi()     returns SPI object after setting pins
       baudrate     clock rate, default = 1 MBd
   Class members:
-    bits[0-7]      BP5BIT instances, one per bit
-  '''
+    bits[0-7]      BP5BIT instances, one per bit'''
 
   def help(self):
     print(self.__doc__)

@@ -33,6 +33,7 @@ from bp5pins import *
 #  MASK_CURRENT_EN_OVERRIDE  = 1<<13  active high
 
 class Power:
+  __doc__ = \
   '''Adjustable Power Supply management class.
   psu = Power(SR, ADC)
     where:
@@ -51,8 +52,7 @@ class Power:
     measure()            measure voltage (V) and current (mA)
     setpoint()           show voltage (V) and current (mA) setpoint
     control()            show control bits ENABLE and OVERRIDE
-    ramp()               ramps power supply for calibration testing
-  '''
+    ramp()               ramps power supply for calibration testing'''
 
   def help(self):
     print(self.__doc__)

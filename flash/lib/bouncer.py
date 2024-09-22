@@ -6,7 +6,8 @@ import random
 import display
 import splash
 import framebuf
-import dplogo25
+from image import Image
+
 import math
 
 class Vector2:
@@ -48,6 +49,9 @@ class Vector2:
   def __str__(self):
     return self.__repr__()
 
+#from dplogo import icon
+#from wrencher import icon
+from buslogo import icon
 class Bouncer:
   def __init__(self, disp, lamps, sw2):
     self.disp = disp
@@ -64,15 +68,27 @@ class Bouncer:
     self.y = 0
     self.xold = self.x
     self.yold = self.y
-    self.icon = dplogo25.logo()
+    # self.icon = dplogo.dplogo
+    self.icon = icon
     self.w = self.icon.wid
     self.h = self.icon.hgt
     self.fb_icon = framebuf.FrameBuffer(self.icon.buf, 
-              self.w, self.h, framebuf.RGB565) 
+                   self.icon.wid, self.icon.hgt, 
+                   self.icon.packing )
+                   #framebuf.GS4_HMSB ) 
+                   # self.wid, self.hgt, framebuf.RGB565) 
+    # make paletter for monochrome blit
+    # self.bg = 0
+    # self.fg = 15
+    # self.palette = FrameBuffer(bytearray(1), 2, 1, GS4_HMSB)
+    # self.palette.pixel(1, 0, self.fg)
+    # self.palette.pixel(0, 0, self.bg)
+    #target.blit(source, 0, 0, -1, palette)
+
     self.dt = 25
-    self.disp.cls()
     self.spin_angle = 2 # degress of angle randomness
     self.spin_speed = 2 # percent speed randomness
+
 
   def spin(self):
     speed, angle = self.v.polar()
@@ -85,6 +101,7 @@ class Bouncer:
     self.y = self.y + self.v.y * dt
 
   def go(self):
+    self.disp.cls()
     while True:
       #print(f'{self.x}, {self.y}')
       self.tft.fill_rect(
@@ -96,6 +113,7 @@ class Bouncer:
         round(self.x), round(self.y),
         self.icon.wid, self.icon.hgt
       )
+
       self.xold = self.x
       self.yold = self.y
       self.move(self.dt)

@@ -11,6 +11,18 @@ bp = buspirate5.BP5()
 #bp = disponly.BP5()
 b = bp
 
+__doc__ = \
+    '''For help:
+BP5         bp.help()      main Bus Pirate 5 
+Lamps       lamps.help()   BP5 board ring multicolor LEDs
+Display     disp.help()    controls BP5 OLED display
+BP5IO       io             manages BP5 I/O pins and devices
+Analog      adc            manages analog-to-digital converters
+Power       psu            adjustable power supply / current limiter
+Pin         sw2            user push button'''
+print(__doc__)
+
+
 RUN_UART_EXAMPLE = False
 RUN_EEPROM_EXAMPLE = False
 msg = bytearray(b'The quick brown fox jumped over the lazy dog.') 
@@ -23,7 +35,6 @@ if RUN_EEPROM_EXAMPLE:
   ee.erase()
   #ee.read(0,256)
   ee.write(msg,0)
-
 
 if RUN_UART_EXAMPLE:
   ee = demo.EEPROM( bp )

@@ -12,7 +12,9 @@ import bp5io
 #import nand
 from hexdump import hexdump
 # use hello example for splash screen
-from splash import splash_screen
+# from splash import splash_screen
+import framebuf
+import bouncer
 
 class BP5:
   '''Bus Pirate 5 RP2040 MicroPython proof-of-concept demo.
@@ -42,9 +44,16 @@ class BP5:
                miso=Pin(PIN_SPI_SDI)
             )
     # Create the modules
+    self.sw2 = Pin(PIN_BUTTONS, Pin.IN, Pin.PULL_DOWN)
+    self.lamps = lamps.Lamps()
     self.sr = sr595.SR(self.spi)
     self.disp = display.Display(self.spi, self.sr)
 
+  def mkchaser(self):
+    # instantiate Bouncer first, for some reason it clears the 
+    # screen (making framebuffer maybe?)
+    self.chaser = bouncer.Bouncer(self.disp, self.lamps, self.sw2)
 
 
-
+b = BP5()
+b.mkchaser()

@@ -2,6 +2,7 @@ from machine import Pin, ADC
 from bp5pins import *
 
 class Analog:
+  __doc__ = \
   '''Manages the analog-to-digital conversion using ADC and shift register.
   adc = Analog(SR, DISP)
     where:
@@ -25,8 +26,7 @@ class Analog:
       VUSB              incoming USB voltage
       CURRENT_DETECT    current sense 
       VREG_OUT          power supply voltage
-      MUX_VREF_OUT      I/O connector Vout
-  '''
+      MUX_VREF_OUT      I/O connector Vout'''
 
   def help(self):
     print(self.__doc__)

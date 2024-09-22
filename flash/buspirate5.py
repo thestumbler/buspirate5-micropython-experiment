@@ -14,10 +14,10 @@ from hexdump import hexdump
 # use hello example for splash screen
 import splash
 import framebuf
-import dplogo25
 import bouncer
 
 class BP5:
+  __doc__ = \
   '''Bus Pirate 5 RP2040 MicroPython proof-of-concept demo.
   Get help on each peripheral device class:
     lamps.help()   LED ring class
@@ -31,8 +31,7 @@ class BP5:
     splash()       shows the splash screen
     saver()        DP logo bounces around the display
     bootloader()   enters the RP2040 bootloader
-  See demo.py for some test scripts
-  '''
+  See demo.py for some test scripts.'''
 
   def help(self):
     print(self.__doc__)
@@ -55,7 +54,6 @@ class BP5:
     self.psu = power.Power(self.sr, self.adc)
     # not ready, do not use NAND
     # self.nand = nand.NAND(self.spi)
-    self.splash()
     # make it easier to access each bit of the I/O connector
     self.b0 = self.io.bits[0]
     self.b1 = self.io.bits[1]
@@ -66,7 +64,11 @@ class BP5:
     self.b6 = self.io.bits[6]
     self.b7 = self.io.bits[7]
 
+    # instantiate Bouncer first, for some reason it clears the 
+    # screen (making framebuffer maybe?)
     self.chaser = bouncer.Bouncer(self.disp, self.lamps, self.sw2)
+
+    self.splash()
 
   # Convenience function to reset into bootloader
   def bootloader(self):

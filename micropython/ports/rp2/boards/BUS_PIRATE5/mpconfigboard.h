@@ -7,3 +7,6 @@
 // #define MICROPY_HW_FLASH_FS_LABEL     "rp5"
 // Whether to include doc strings (increases RAM usage)
 #define MICROPY_ENABLE_DOC_STRING (1)
+
+//#define MICROPY_PY_BUILTINS_HELP_TEXT           bp5_help_text
+#define BUS_PIRATE5_HELP

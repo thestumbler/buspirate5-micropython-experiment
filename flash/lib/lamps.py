@@ -15,6 +15,7 @@ class Colors:
 
 
 class Lamps:
+  __doc__ = \
   '''Manages the chain of 18 each RGB LEDs arranged
   around the BP5 perimeter on the top and sides as follows:
     lamps = lamps.Lamps()
@@ -35,8 +36,7 @@ class Lamps:
       cyan, purple, yellow
       white, black
     Groups of LEDs sorted by geometry:
-      use map() function for help on mapping / groups
-  '''
+      use map() function for help on mapping / groups'''
 
   def help(self):
     print(self.__doc__)
