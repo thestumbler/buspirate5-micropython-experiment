@@ -155,7 +155,7 @@ class Analog:
       self.deselect()
     return val
 
-  def strings(self):
+  def strings_disp(self):
     out = []
     for ich in range(self.NCHAN):
       out.append(
@@ -163,6 +163,9 @@ class Analog:
         f'{self.read(self.AIN[ich]):5.3f} '
         f'{self.UNITS[ich]}')
     return out
+
+  def strings(self):
+    return self.strings_disp()
 
   def __repr__(self):
     return '\n'.join( self.strings() )

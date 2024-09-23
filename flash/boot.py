@@ -1,5 +1,5 @@
 import sys
-sys.path.append('examples')
+sys.path.append('demos')
 sys.path.append('fonts')
 
 

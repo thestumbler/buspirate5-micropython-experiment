@@ -5,7 +5,7 @@ import buspirate5
 import eeprom_spi as eeprom
 from hexdump import hexdump
 
-# Simple demonstration classes for the hardware interfaces.
+# Simple demonstration of SPI EEPROM access
 
 class EEPROM:
   '''Test of Atmel AT25080 8 Kib ( 1024 x 8 ) EEPROM.'''
@@ -56,23 +56,51 @@ class EEPROM:
     hexdump( self.buf, offset=self.addr )
 
 
-class UART:
-  '''Test of serial port UART.'''
-  def __init__( self, bp, port=0, baud=115200 ):
-    self.bp = bp
-    self.port = port
-    self.baud = baud
-    self.initialized = False
+def ego( bp=None ):
+  __doc__ = \
+  '''EEPROM demo ego() command
+  ego(bp)     runs the EEPROM demo, bp argument is BP5
+  ego()       shows this help message'''
 
-  def init(self):
-    self.uart = self.bp.io.make_uart(self.port, self.baud)
-    self.initialized = True
+  if bp is None:
+    print(__doc__)
+    return
 
-    # uart.write('hello world\r\n')
-    # line = uart.readline()
-    # print(line)
-    # uart.write(line)
+  msg_list = [ 
+    bytearray(b'The quick brown fox jumped over the lazy dog.'),
+    bytearray(b'The lazy red fox crawled over the sleepy dog.'),
+    bytearray(b'The gloomy blue fox cried over the tired dog.'),
+    bytearray(b'The perky yellow fox lept over the happy dog.'),
+  ]
 
+  ee = EEPROM( bp )
+  ee.init()
+  addr_list = [ 0x00, 0x40, 0x80, 0xc0 ]
+  fill_list = [ 0xaa, 0x55 ]
 
+  for fill in fill_list:
+    print(f'* erase with fill with value test, 0x{fill:02x} ...')
+    ee.erase(b'\xaa')
+    ee.read(0,256) # read and dump first 256 bytes
+    time.sleep_ms(100)
 
+  print('* erase, default fill (0x00)')
+  ee.erase()
+  ee.read(0, 256) # read and dump first 256 bytes
+  time.sleep_ms(100)
+
+  print('* writing some messages ...')
+  for addr, msg in zip(addr_list, msg_list):
+    print(f'  - msg @ 0x{addr:04x}: {msg.decode("ascii")}')
+    ee.write(msg, addr, dump=False)
+    time.sleep_ms(100)
+    
+  print('* reading some messages ...')
+  for addr, msg in zip(addr_list, msg_list):
+    print(f'  - msg @ 0x{addr:04x}: {msg.decode("ascii")}')
+    ee.read(addr, len(msg), dump=False)
+    time.sleep_ms(100)
+
+  print('dump of first 256 bytes ...')
+  ee.read(0, 256) 
 

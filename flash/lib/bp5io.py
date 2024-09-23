@@ -25,13 +25,24 @@ class BP5BIT:
     elif d == Pin.OUT:        return '1=OUTPUT    '
     elif d == Pin.OPEN_DRAIN: return '2=OPEN_DRAIN'
     return                          f'{d}=UNKNOWN   '
-
   def pull_string( self, p ):
     if p is None:              return 'None=No pulls'
     else:
       if   p == Pin.PULL_UP:   return '1=PULL_UP    '
       elif p == Pin.PULL_DOWN: return '2=PULL_DOWN  '
       return                          f'{d}=UNKNOWN '
+
+  def dir_string_short( self, d ):
+    if   d == Pin.IN:         return 'INP'
+    elif d == Pin.OUT:        return 'OUT'
+    elif d == Pin.OPEN_DRAIN: return 'HIZ'
+    return                           'UNK'
+  def pull_string_short( self, p ):
+    if p is None:              return 'NON'
+    else:
+      if   p == Pin.PULL_UP:   return 'PUP'
+      elif p == Pin.PULL_DOWN: return 'PDN'
+      return                          'UNK'
 
   def __init__(self, iobit, pin_num_io, pin_num_dir, 
                direction, pull=Pin.PULL_UP):
@@ -52,11 +63,20 @@ class BP5BIT:
 
   def __repr__(self):
     return \
-    f'IO.{self.iobit}: ' \
+    f'IO{self.iobit}: ' \
     f'GPIO{self.pin_num_io:02d} V:{self.pin.value()} ' \
     f'D:{self.dir_string(self.direction)}        ' \
     f'P:{self.pull_string(self.pull)}          ' \
     f'DIR{self.pin_num_dir} V:{self.dir.value()}'
+
+  def __str__(self):
+    return self.__repr__()
+
+  def string_short(self):
+    return \
+    f'IO{self.iobit}:' \
+    f' {self.dir_string_short(self.direction)}' \
+    f'   {self.pin.value()}'
 
   def value( self, val=None ):
     if val is None:
@@ -157,6 +177,12 @@ class BP5IO:
     out.append(f'Pullups {string}')
     return out
 
+  def strings_short(self):
+    out = []
+    for bit in self.bits:
+      out.append( f'{bit.string_short()}' )
+    return out
+
   def __repr__(self):
     return '\n'.join( self.strings() )
 
@@ -170,6 +196,23 @@ class BP5IO:
       print(pinout)
       self.disp.text( pinout, row+1, 0 )
   
+  def print(self, clear=True, display=True, console=True):
+    """Show the logic values on the screen."""
+    if clear: self.disp.cls()
+    results = self.strings_short() 
+    for row, result in enumerate(results[0:4]):
+      if console: print(result)
+      if display: self.disp.text( result, row, 0 )
+    for row, result in enumerate(results[4:8]):
+      if console: print(result)
+      if display: self.disp.text( result, 5+row, 0 )
+
+  def print_bit(self, ibit, display=True, console=True):
+    results = self.strings_short() 
+    if ibit < 4: row = ibit
+    else:        row = ibit + 1
+    if display: self.disp.text( results[ibit], row, 0 )
+    if console: print(results[ibit])
 
 
 # There are two UARTs, UART0 and UART1,
