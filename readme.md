@@ -1,5 +1,7 @@
 # MicroPython on Bus Pirate 5 -- Experimental Proof of Concept
 
+![](images/image.png)
+
 This repo contains MicroPython (MP) modules for use in exercising the
 hardware and interfaces of the using the RP2040 microcontroller based
 Bus Pirate 5 (BP5) from Dangerous Prototypes.
@@ -28,7 +30,7 @@ Do not use it for anything important.
 |   |-- spi_flash
 |   +-- st7789_mpy
 |-- flash           <== files to upload to BP5
-|   |-- examples
+|   |-- demos
 |   |-- fonts
 |   +-- lib
 |-- micropython     <== BP5 board description file
@@ -46,7 +48,14 @@ flash
 |-- boot.py            <== standard MP bootup
 |-- main.py            <== main program
 |-- buspirate5.py      <== main BP5 class
-|-- demo.py            <== contains some demo programs
+|-- demos
+|   |-- demo_eeprom.py
+|   |-- demo_io.py
+|   |-- demo_uart.py
+|   |-- boxlines.py
+|   |-- color_test.py
+|   |-- feathers.py
+|   +-- hello.py
 |-- lib
 |   |-- bp5pins.py     <== RP2040 pin definition constants
 |   |-- bp5io.py       <== Manages BP5 I/O pins and devices
@@ -58,6 +67,10 @@ flash
 |   |-- splash.py      <== splash screen on TFT
 |   |-- nand.py        <== nand flash driver (not working)
 |   |-- hexdump.py     <== block hex dump utility
+
+|   |-- dplogo.py      <== dangerous prototypes logo, RGB565
+|   |-- wrencher.py    <== hackaday wrencher logo, RGB565
+|   |-- busloto.py     <== bus pirate 5 logo, RGB565
 |   |
 |   |-- eeprom_spi.py  <== eeprom driver code      (EXT1)
 |   |-- bdevice.py     <== block device driver     (EXT1)
@@ -177,4 +190,8 @@ Getting this to work is just a matter of additional time and focus.
 ## Micropython
 
 * [https://github.com/micropython/micropython](https://github.com/micropython/micropython)
-* [https://docs.micropython.org/en/latest/index.html]()
+* [https://docs.micropython.org/en/latest/index.html](https://docs.micropython.org/en/latest/index.html)
+
+## Images
+
+* [https://github.com/thestumbler/rgb565-converter](https://github.com/thestumbler/rgb565-converter)
