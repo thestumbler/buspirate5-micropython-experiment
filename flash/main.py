@@ -1,6 +1,4 @@
 import time
-from machine import Pin, SPI
-from bp5pins import *
 import buspirate5
 
 time.sleep_ms(500)
